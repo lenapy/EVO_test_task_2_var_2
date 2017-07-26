@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>loader-main</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data" id="form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="file" class="cols-sm-2 control-label">Вы можете загрузить файл тут</label>
+            <div class="input-group">
+                <input type="file" class="form-control" name="file" id="file"/>
+            </div>
+        </div>
+        <div class="form-group ">
+            <button class="btn btn-default regbutton">Загрузить</button>
+        </div>
+        <div>
+            <p id="count_of_uploads" style="display: none">
+                К-во загрузок: {{ count }}
+            </p>
+        </div>
+        <div >
+            <p id="hash_sum" style="display: none">
+                Хэш сумма: {{ sum }}
+            </p>
+        </div>
+
+    </form>
+    <script>
+        $('.regbutton').click(function(e){
+            e.preventDefault();
+            var formData = new FormData($('#form')[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+               url: '/upload/',
+               type: 'POST',
+               data: formData,
+               async: false,
+               cache: false,
+               contentType: false,
+               enctype: 'multipart/form-data',
+               processData: false,
+               dataType: 'JSON',
+               success: function (result) {
+                 console.log(result)
+                 alert('Файл загружен');
+               }
+            });
+        $('#count_of_uploads').show();
+        $('#hash_sum').show();
+        });
+
+
+    </script>
+</body>
+</html>
