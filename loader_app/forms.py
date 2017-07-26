@@ -6,7 +6,7 @@ class UploadFileForm(forms.Form):
 
     def clean(self):
         file = self.cleaned_data['file']
-        if file.size > 10000000000:
+        if file.size > 10000:
             raise forms.ValidationError("%s больше чем 10кб" % file.size)
         else:
             return file

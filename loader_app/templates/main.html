@@ -21,17 +21,6 @@
         <div class="form-group ">
             <button class="btn btn-default regbutton">Загрузить</button>
         </div>
-        <div>
-            <p id="count_of_uploads" style="display: none">
-                К-во загрузок: {{ count }}
-            </p>
-        </div>
-        <div >
-            <p id="hash_sum" style="display: none">
-                Хэш сумма: {{ sum }}
-            </p>
-        </div>
-
     </form>
     <script>
         $('.regbutton').click(function(e){
@@ -40,7 +29,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
             $.ajax({
                url: '/upload/',
-               type: 'POST',
+               type: $('#form').attr('method'),
                data: formData,
                async: false,
                cache: false,
@@ -48,15 +37,18 @@
                enctype: 'multipart/form-data',
                processData: false,
                dataType: 'JSON',
-               success: function (result) {
-                 console.log(result)
-                 alert('Файл загружен');
+               success: function(data) {
+                         if (data.result){
+                                var count = data.count
+                                var sum = data.sum
+                                alert('К-во загрузок: '+ count + '\n' + 'Хэш сумма:' + '\n' + sum);
+                         }
+                         else{
+                                alert(data.errors.name[0]);
+                         }
                }
-            });
-        $('#count_of_uploads').show();
-        $('#hash_sum').show();
+           });
         });
-
 
     </script>
 </body>
